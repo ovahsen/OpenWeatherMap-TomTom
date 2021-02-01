@@ -5,6 +5,7 @@
   <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.4.0/maps/maps.css'>
   <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.4.0/maps/maps-web.min.js"></script>
   <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.4.0/services/services-web.min.js"></script>
+<!--Using version 6 of the TomTom SDK for Web    -->
 </head>
 
 
@@ -12,8 +13,10 @@
   <div style='width:100vw; height:100vh' id='map'></div>
 
   <script>
+// Setting a variable with a default location we can "fly" to upon opening the map
     var AUSTIN = { lng: -97.743, lat: 30.26 }
 
+// Instantiating our basic map - use your TomTom API key!
     var map = tt.map({
       key: 'your-API-key',
       container: 'map',
@@ -21,6 +24,7 @@
       zoom: 13
     })
 
+// Here we're querying OpenWeatherMap for the first time to get the cloud raster tiles. This is where we ran into our 60 calls per second limit with our key!
     var cloudSource = {
       type: 'raster',
       tiles: ['https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=your-openweathermap-id'],
@@ -29,7 +33,8 @@
       maxZoom: 12,
       attribution: 'OpenWeatherMap.Org'
     }
-
+    
+// Now doing the same thing for tiles related to rain. You can use the same key you generated from OpenWeatherMap for the lines above. 
     var rainSource = {
       type: 'raster',
       tiles: ['https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=your-openweathermap-id'],
@@ -38,7 +43,10 @@
       maxZoom: 12,
       attribution: 'OpenWeatherMap.Org'
     }
-
+    
+    
+// Next, we add both as layers.
+    
     var cloudLayer = {
       'id': 'cloud_layer',
       'type': 'raster',
@@ -53,6 +61,7 @@
       'layout': { 'visibility': 'visible' }
     }
 
+    // When the TomTom Map loads, we want those raster tiles to display their respective visual layers. When we zoom in and out, we can then see cloud cver and blue rain.
     map.on('load', function () {
       map.addSource('cloud_source', cloudSource)
       map.addLayer(cloudLayer)
@@ -60,12 +69,15 @@
       map.addSource('rain_source', rainSource)
       map.addLayer(rainLayer)
     })
-
+    
+   // Next, we go about creating those popups which will display when we click on the map. 
+   //OpenWeatherMap explains this a little more, but basically we want cities nearby our click to show popups with their weather.
     map.on('click', function (event) {
       console.log(event.lngLat)
       weatherForCityAround(event.lngLat)
     })
 
+    // For each city's popup, we set the font of the text, add the temp in Fahrenheit, add a weather icon, and weather description.
     function createDOM(city) {
       let div = document.createElement('div')
       div.style.font = 'italic bold 24px arial'
@@ -84,6 +96,7 @@
       return div
     }
 
+    // Finally, we generate the popups themselves with the information queries we've made using fetch. Now, when you click, those little boxes will appear!
     async function weatherForCityAround(lngLat) {
       var url = 'https://api.openweathermap.org/data/2.5/find?units=imperial&lat={lat}&lon={lon}&cnt=50&appid=your-openweathermap-id'
       url = url.replace('{lat}', lngLat.lat)
