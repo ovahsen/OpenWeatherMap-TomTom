@@ -1,13 +1,13 @@
 # OpenWeatherMap-TomTom
 Integrating OpenWeatherMap Tiles with the TomTom Maps APIs!
 
+You can get started with a TomTom Developer Portal account right here:https://bit.ly/38nbvLX
+
 As seen on our YouTube channel, we streamed on how to add weather tiles to a TomTom Map. Find our YouTube channel here: https://www.youtube.com/channel/UCL-ZtGd70Khd_9OJACd6rXA
 
 This is the video: https://youtu.be/6oEPjwVYEYg
 
 All that's needed are a TomTom Developers account and API key, the basic Web SDK setup, and an OpenWeatherMap access key.
-
-You can get started with a TomTom Developer Portal account right here:https://developer.tomtom.com/
 
 And with OpenWeatherMap here: https://openweathermap.org/
 
